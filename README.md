@@ -13,4 +13,4 @@ Script automatically restores progress from the last running scrapping session.
 You can easily jump into a python interpreter and use `pandas.to_csv()` to convert the DataFrame to a csv file for further analysis.
 
 ## Dataset
-Dataset will be published to Kaggle soon.
+Dataset will be published soon.
