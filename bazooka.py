@@ -1,6 +1,4 @@
 import atexit
-from sqlite3 import SQLITE_SAVEPOINT
-from time import sleep
 from tqdm import tqdm
 import httpx
 from bs4 import BeautifulSoup
