@@ -65,11 +65,6 @@ class Scraper:
             self.loadFromDisk()
         except FileNotFoundError:
             self.saveToDisk()
-    
-
-    def run(self):
-        pass
-
 
 
 if __name__ == "__main__":
