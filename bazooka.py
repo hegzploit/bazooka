@@ -47,10 +47,6 @@ class Scraper:
         r[2] = r[2].transpose()
         r[2] = r[2].rename(columns=r[2].iloc[0]).drop(r[2].index[0]).set_index(r[0].index)
         r_f = pd.concat([r[0], r[1], r[2]], axis=1)
-        # get the index value of last column
-
-    
-
         self.results_df = self.results_df.append(r_f)
 
     def saveToDisk(self) -> None:
