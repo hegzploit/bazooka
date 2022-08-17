@@ -1,10 +1,12 @@
 import atexit
+import contextlib
 from tqdm import tqdm
 import httpx
 from bs4 import BeautifulSoup
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
+import multiprocessing.dummy as mp
 
 class Scraper:
     def __init__(self) -> None:
@@ -14,7 +16,7 @@ class Scraper:
         self.failed_numbers = []
         self.token = self.getToken()
         self.status = 0
-        self.current_seat_no = 0
+        self.current_seat_no = 123456
         self.load()
 
 
@@ -66,6 +68,15 @@ class Scraper:
         except FileNotFoundError:
             self.saveToDisk()
 
+    def run(self, i):
+        seat_num = str(i).zfill(6)
+        with contextlib.suppress(Exception):
+            self.storeResult(seat_num)
+            if self.status == 403:
+                self.client.close()
+                self.client = httpx.Client()
+                self.token = s.getToken()
+
 
 if __name__ == "__main__":
     s = Scraper()
@@ -75,18 +86,17 @@ if __name__ == "__main__":
         print("saving to disk")
         s.saveToDisk()
 
-    curr_seat = int(s.current_seat_no)
-    bar = tqdm(range(curr_seat, 999999))
-    for i in bar:
-        idx = str(i).zfill(6)
-        tqdm.write(f"Status: {s.status}")
+    scraping_range = range(int(s.current_seat_no), 999999)
+    range_length = len(scraping_range)
+    with mp.Pool(500) as p:
         try:
-            if s.status == 403:
-                s.client.close()
-                s.client = httpx.Client()
-                s.token = s.getToken()
-            s.storeResult(idx)
-        except Exception as e:
-            continue
-        finally:
+            list(tqdm(p.imap_unordered(s.run, scraping_range, chunksize=16), total=range_length))
+            p.close()
+            p.join()
             s.saveToDisk()
+        except:
+            p.terminate()
+            p.join()
+            s.saveToDisk()
+            raise
+        
