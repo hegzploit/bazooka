@@ -1,5 +1,6 @@
 ## Bazooka
 Bazooka scrapes thanaweya 3amma, Egypt's highscool student results.
+> Super Bazooka: Now multithreaded and faster than ever!
 
 ## Usage
 ```
