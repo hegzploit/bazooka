@@ -16,7 +16,7 @@ class Scraper:
         self.failed_numbers = []
         self.token = self.getToken()
         self.status = 0
-        self.current_seat_no = 123456
+        self.current_seat_no = 0
         self.load()
 
 
